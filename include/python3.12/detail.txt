@@ -1,1 +1,7 @@
 ここにはpyhtonの自作モジュールを入れるらしい
+
+後からgitignoreする方法
+https://qiita.com/yutosa3/items/25ab031c8061e8c9a4c4
+
+リモートリポジトリ新規作成時のThere isn't anything to compare.の解決方法
+https://qiita.com/axs-dev/items/93983ad1b91de34a8c6d
