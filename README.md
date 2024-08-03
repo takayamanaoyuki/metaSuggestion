@@ -1,4 +1,4 @@
-##入れる必要のあるモジュール
+## 入れる必要のあるモジュール
 import openai
 
 import fastapi
@@ -6,5 +6,5 @@ import fastapi
 import pandas
 
 
-##バックエンドの起動
+## バックエンドの起動
 metaSuggestionフォルダで　uvicorn response:app --reload
