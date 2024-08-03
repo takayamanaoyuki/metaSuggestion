@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+
 type Message = {
   text: string;
   sender: string;
@@ -12,6 +13,7 @@ const Chatbot = () => {
   const REACT_APP_API_ENDPOINT="https://api.a3rt.recruit.co.jp/talk/v1/smalltalk";
 
   const REACT_APP_API_KEY="ZZIvj2zkNOz6X4sUwY83l14fmctn1e6W";
+  const chatgpt_API_ENDPOINT = "http://localhost:8000/response/"
 
 
   useEffect(() => {
@@ -27,22 +29,20 @@ const Chatbot = () => {
     setMessages(messages => [...messages, { text: input, sender: 'user' }]);
     setInput('');
     try {
-      const response = await fetch(REACT_APP_API_ENDPOINT ?? "", {
+      const response = await fetch(chatgpt_API_ENDPOINT ?? "", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json',
+          "Access-Control-Allow-Origin": "*"
         },
-        body: new URLSearchParams({
-          apikey: REACT_APP_API_KEY ?? "",
+        body: JSON.stringify({
           query: input
         })
       });
       const data = await response.json();
-      if (data.status === 0) {
-        setMessages(messages => [...messages, { text: data.results[0].reply, sender: 'bot' }]);
-      } else {
-        setMessages(messages => [...messages, { text: 'Error: Unable to generate response', sender: 'bot' }]);
-      }
+      console.log(data)
+
+      setMessages(messages => [...messages, { text: data.message, sender: 'bot' }]);
     } catch (error) {
       setMessages(messages => [...messages, { text: 'Error: Failed to fetch data from API', sender: 'bot' }]);
     }

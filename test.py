@@ -2,13 +2,17 @@ from openai import OpenAI
 import json
 from fastapi.encoders import jsonable_encoder
 import pandas as pd
+from fastapi import FastAPI
 
+
+app = FastAPI()
 client = OpenAI(
     api_key="sk-proj-OOfH6Ub3xWJQ5clBqfh2T3BlbkFJaTS3A0h9ZKDbzCPg1045"
 )
 
 messages = []
 
+#@app.get("/")
 completion = client.chat.completions.create(
      model="gpt-4o",
      messages=[
