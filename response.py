@@ -7,7 +7,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 import sys
+import os
+
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
+
 
 class Input(BaseModel):
     query: str
@@ -49,7 +52,7 @@ def gptResponse(outputData: Input):
     else:
         from openai import OpenAI
         client = OpenAI(
-            api_key="sk-proj-OOfH6Ub3xWJQ5clBqfh2T3BlbkFJaTS3A0h9ZKDbzCPg1045"
+            api_key=os.environ["OPENAI_API_KEY1"]
         )
         completion = client.chat.completions.create(
             model="gpt-4o",
