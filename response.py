@@ -9,10 +9,10 @@ from fastapi.responses import JSONResponse
 from openai import OpenAI
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-
 import sys
 import os
-from typing import List
+from typing import List, Literal
+
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
 
 class Input(BaseModel):
@@ -21,6 +21,16 @@ class Input(BaseModel):
 class Output(BaseModel):
     id: str
     message: str
+
+class SendMessage(BaseModel):
+    role: Literal["system", "user", "assistant"]
+    content: str
+
+class ChatgptMemory:
+    id: int
+    content: List[str]
+    embedding: List[float]
+    similarity: np.float64
 
 app = FastAPI()
 origins = [
@@ -42,7 +52,7 @@ app.add_middleware(
 )
 
 messages: List[str] = []
-chatgpt_memory = []
+chatgpt_memory: List[ChatgptMemory] = []
 
 """@app.exception_handler(RequestValidationError)
 async def handler(request:Request, exc:RequestValidationError):
@@ -72,7 +82,7 @@ def saveConvMemory (messages):
 
     #本当はベクトルDBに保存しないとですね
     chatgpt_memory.append({"id":len(chatgpt_memory),"content":messages.copy(),"embedding":embedding})
-
+    
 def get_embedding(text: List[str], model="text-embedding-3-small", dim=None):
     text = list(map(lambda x: x.replace("\n", " "), text))
     if dim is None:
@@ -86,7 +96,7 @@ def get_embedding(text: List[str], model="text-embedding-3-small", dim=None):
 @app.post("/response/")  
 def main(inputData: Input):
     message: str = inputData.query
-    sendMessages = [{
+    sendMessages: SendMessage = [{
                         "role": "system",
                         "content": "日本語で返答してください。"
                     }]
@@ -98,20 +108,18 @@ def main(inputData: Input):
         embedding = get_embedding([message])
         # chatgpt_memoryの各要素にsimilarityを追加
         for i in range(len(chatgpt_memory)):
-            chatgpt_memory[i]["similarity"] = cosine_similarity(np.array([embedding]), np.array([chatgpt_memory[i]["embedding"]]))
-
+            chatgpt_memory[i]["similarity"] = cosine_similarity(np.array([embedding]), np.array([chatgpt_memory[i]["embedding"]]))[0][0]
         # similarityでソートした上で、先頭の3要素を取得
         top3_memory = sorted(chatgpt_memory, key=lambda x: x["similarity"], reverse=True)
         top3_memory = top3_memory[:3]
 
-        remember_memory = []
+        remember_memory: List[List[str]] = []
         for i in range(len(top3_memory)):
             remember_memory.append(top3_memory[i]["content"])
             # top3_memory[i]["id"]がリストの最後の要素でなければ
             if top3_memory[i]["id"] != len(chatgpt_memory)-1:
                 remember_memory.append(chatgpt_memory[top3_memory[i]["id"]+1]["content"])
         for i in range(len(remember_memory)):
-            print(remember_memory)
             sendMessages.append({"role":"user", "content":remember_memory[i][0]})
             sendMessages.append({"role":"assistant", "content":remember_memory[i][1]})
         sendMessages.append({"role":"user", "content":message})
