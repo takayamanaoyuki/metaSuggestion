@@ -8,6 +8,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from openai import OpenAI
 import sys
+import os
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
 
 class Input(BaseModel):
@@ -22,7 +23,7 @@ origins = [
     "http://localhost:3000",
 ]
 client = OpenAI(
-            api_key="sk-proj-OOfH6Ub3xWJQ5clBqfh2T3BlbkFJaTS3A0h9ZKDbzCPg1045"
+            api_key=os.environ["OPENAI_API_KEY1"]
         )
 
 app.add_middleware(
