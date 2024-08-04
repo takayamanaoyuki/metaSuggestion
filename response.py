@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from openai import OpenAI
 import sys
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
 
@@ -20,6 +21,9 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
 ]
+client = OpenAI(
+            api_key="sk-proj-OOfH6Ub3xWJQ5clBqfh2T3BlbkFJaTS3A0h9ZKDbzCPg1045"
+        )
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,6 +37,7 @@ app.add_middleware(
 )
 
 messages = []
+chatgpt_memory = []
 
 """@app.exception_handler(RequestValidationError)
 async def handler(request:Request, exc:RequestValidationError):
@@ -47,10 +52,6 @@ def gptResponse(outputData: Input):
     if not outputData.query:
         return "Null"
     else:
-        from openai import OpenAI
-        client = OpenAI(
-            api_key="sk-proj-OOfH6Ub3xWJQ5clBqfh2T3BlbkFJaTS3A0h9ZKDbzCPg1045"
-        )
         completion = client.chat.completions.create(
             model="gpt-4o",
             messages=[
@@ -68,4 +69,23 @@ def gptResponse(outputData: Input):
         return outputData
 
 
+def saveConvMemory (messages):
+
+    # 過去会話往復のjsonをまんまベクトル化する
+    embedding = get_embedding(json.dumps(jsonable_encoder(messages),ensure_ascii=False))
+
+    #本当はベクトルDBに保存しないとですね
+    chatgpt_memory.append({"id":len(chatgpt_memory),"content":messages.copy(),"embedding":embedding})
+
+def get_embedding(text, model="text-embedding-3-small", dim=None):
+    text = text.replace("\n", " ")
+    if dim is None:
+        return client.embeddings.create(input=[text], model=model).data[0].embedding
+    else:
+        return (
+            client.embeddings.create(input=[text], model=model, dimensions=dim)
+            .data[0]
+            .embedding
+        )
+    
     
