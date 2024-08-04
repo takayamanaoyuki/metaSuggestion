@@ -8,6 +8,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from openai import OpenAI
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 import sys
 import os
@@ -50,24 +51,15 @@ async def handler(request:Request, exc:RequestValidationError):
     return JSONResponse(content={}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 """
 
-@app.post("/response/")
-def gptResponse(outputData: Input):
-    print(outputData)
-    if not outputData.query:
+
+def gptResponse(query, messages):
+    print(query)
+    if not query:
         return "Null"
     else:
         completion = client.chat.completions.create(
             model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "日本語で返答してください。"
-                },
-                {
-                    "role": "user",
-                    "content": outputData.query
-                },
-            ],
+            messages=messages
         )
         outputData = Output(id=completion.id, message=completion.choices[0].message.content)
         return outputData
@@ -91,25 +83,45 @@ def get_embedding(text: List[str], model="text-embedding-3-small", dim=None):
             .data[0]
             .embedding
         )
-    
-def main(outputData: Input):
-    messages.append(outputData.query)
+@app.post("/response/")  
+def main(inputData: Input):
+    message: str = inputData.query
+    sendMessages = [{
+                        "role": "system",
+                        "content": "日本語で返答してください。"
+                    }]
+    messages.append(message)
     if len(messages) >= 3:
         #前回入力と前回応答の二つを取得
         saveConvMemory(messages[-3:-1])
-    message: str = outputData.query
-    embedding = get_embedding([message])
-    # chatgpt_memoryの各要素にsimilarityを追加
-    for i in range(len(chatgpt_memory)):
-        chatgpt_memory[i]["similarity"] = cosine_similarity(embedding, chatgpt_memory[i]["embedding"])
+        
+        embedding = get_embedding([message])
+        # chatgpt_memoryの各要素にsimilarityを追加
+        for i in range(len(chatgpt_memory)):
+            chatgpt_memory[i]["similarity"] = cosine_similarity(np.array([embedding]), np.array([chatgpt_memory[i]["embedding"]]))
 
-    # similarityでソートした上で、先頭の3要素を取得
-    top3_memory = sorted(chatgpt_memory, key=lambda x: x["similarity"], reverse=True)
-    top3_memory = top3_memory[:3]
+        # similarityでソートした上で、先頭の3要素を取得
+        top3_memory = sorted(chatgpt_memory, key=lambda x: x["similarity"], reverse=True)
+        top3_memory = top3_memory[:3]
 
-    remember_memory = []
-    for i in range(len(top3_memory)):
-        remember_memory.extend(top3_memory[i]["content"])
-        # top3_memory[i]["id"]がリストの最後の要素でなければ
-        if top3_memory[i]["id"] != len(chatgpt_memory)-1:
-            remember_memory.extend(chatgpt_memory[top3_memory[i]["id"]+1]["content"])
+        remember_memory = []
+        for i in range(len(top3_memory)):
+            remember_memory.append(top3_memory[i]["content"])
+            # top3_memory[i]["id"]がリストの最後の要素でなければ
+            if top3_memory[i]["id"] != len(chatgpt_memory)-1:
+                remember_memory.append(chatgpt_memory[top3_memory[i]["id"]+1]["content"])
+        for i in range(len(remember_memory)):
+            print(remember_memory)
+            sendMessages.append({"role":"user", "content":remember_memory[i][0]})
+            sendMessages.append({"role":"assistant", "content":remember_memory[i][1]})
+        sendMessages.append({"role":"user", "content":message})
+        response = gptResponse(message, sendMessages)
+        messages.append(response.message)
+        return response
+    else:
+        sendMessages.append({"role":"user", "content":message})
+        response = gptResponse(message, sendMessages)
+        messages.append(response.message)
+        return response
+
+        
