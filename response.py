@@ -7,8 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from openai import OpenAI
+from sklearn.metrics.pairwise import cosine_similarity
+
 import sys
 import os
+from typing import List
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
 
 class Input(BaseModel):
@@ -37,7 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-messages = []
+messages: List[str] = []
 chatgpt_memory = []
 
 """@app.exception_handler(RequestValidationError)
@@ -78,15 +81,35 @@ def saveConvMemory (messages):
     #本当はベクトルDBに保存しないとですね
     chatgpt_memory.append({"id":len(chatgpt_memory),"content":messages.copy(),"embedding":embedding})
 
-def get_embedding(text, model="text-embedding-3-small", dim=None):
-    text = text.replace("\n", " ")
+def get_embedding(text: List[str], model="text-embedding-3-small", dim=None):
+    text = list(map(lambda x: x.replace("\n", " "), text))
     if dim is None:
-        return client.embeddings.create(input=[text], model=model).data[0].embedding
+        return client.embeddings.create(input=text, model=model).data[0].embedding
     else:
         return (
-            client.embeddings.create(input=[text], model=model, dimensions=dim)
+            client.embeddings.create(input=text, model=model, dimensions=dim)
             .data[0]
             .embedding
         )
     
-    
+def main(outputData: Input):
+    messages.append(outputData.query)
+    if len(messages) >= 3:
+        #前回入力と前回応答の二つを取得
+        saveConvMemory(messages[-3:-1])
+    message: str = outputData.query
+    embedding = get_embedding([message])
+    # chatgpt_memoryの各要素にsimilarityを追加
+    for i in range(len(chatgpt_memory)):
+        chatgpt_memory[i]["similarity"] = cosine_similarity(embedding, chatgpt_memory[i]["embedding"])
+
+    # similarityでソートした上で、先頭の3要素を取得
+    top3_memory = sorted(chatgpt_memory, key=lambda x: x["similarity"], reverse=True)
+    top3_memory = top3_memory[:3]
+
+    remember_memory = []
+    for i in range(len(top3_memory)):
+        remember_memory.extend(top3_memory[i]["content"])
+        # top3_memory[i]["id"]がリストの最後の要素でなければ
+        if top3_memory[i]["id"] != len(chatgpt_memory)-1:
+            remember_memory.extend(chatgpt_memory[top3_memory[i]["id"]+1]["content"])
