@@ -5,6 +5,9 @@ import fastapi
 
 import pandas
 
+##　フロントの起動
+frontフォルダでnpm start
+
 
 ## バックエンドの起動
 metaSuggestionフォルダで　uvicorn response:app --reload
