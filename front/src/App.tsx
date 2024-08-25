@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Header } from './atoms/Header';
 
 
 type Message = {
@@ -50,6 +51,7 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot">
+      <Header/>
       <ul className="messages">
         {messages.map((message, index) => (
           <li key={index} className={message.sender}>
