@@ -14,7 +14,7 @@ const Chatbot = () => {
   const REACT_APP_API_ENDPOINT="https://api.a3rt.recruit.co.jp/talk/v1/smalltalk";
 
   const REACT_APP_API_KEY="ZZIvj2zkNOz6X4sUwY83l14fmctn1e6W";
-  const chatgpt_API_ENDPOINT = "http://localhost:8000/response/"
+  const chatgpt_API_ENDPOINT = "http://localhost:8000/responseShortMemory/"
 
 
   useEffect(() => {

@@ -24,7 +24,7 @@ export const MetaSelect: React.FC<Props> = ({menuItems, defaultValue}) => {
         >
           {menuItems.map((menuItem) => {
             return (
-              <MenuItem value={menuItem.value}>{menuItem.name}</MenuItem>
+              <MenuItem key={menuItem.value} value={menuItem.value}>{menuItem.name}</MenuItem>
             )
           })}
         </Select>
