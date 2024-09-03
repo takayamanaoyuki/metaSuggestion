@@ -49,7 +49,17 @@ async def handler(request:Request, exc:RequestValidationError):
 
 @app.post("/response/")
 def main_normal(inputData: gptResponse.Input):
-    return gptResponse.gptResponse(inputData)
+    messages = [
+                {
+                    "role": "system",
+                    "content": "日本語で返答してください。"
+                },
+                {
+                    "role": "user",
+                    "content": inputData.query
+                },
+            ]
+    return gptResponse.gptResponse(messages)
 
 
 @app.post("/responseShortMemory/")  

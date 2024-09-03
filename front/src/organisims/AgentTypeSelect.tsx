@@ -4,7 +4,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { MetaSelect } from '../atoms/Select';
+import { MetaSelect } from '../atoms/MetaSelect';
 
 export default function AgentTypeSelect() {
   const [age, setAge] = React.useState('');

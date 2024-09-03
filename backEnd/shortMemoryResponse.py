@@ -31,17 +31,13 @@ client = OpenAI(
             api_key=os.environ["OPENAI_API_KEY1"]
         )
 
-def gptResponse(query, messages):
-    print(query)
-    if not query:
-        return "Null"
-    else:
-        completion = client.chat.completions.create(
-            model="gpt-4o",
-            messages=messages
-        )
-        outputData = Output(id=completion.id, message=completion.choices[0].message.content)
-        return outputData
+def gptResponse(messages):
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=messages
+    )
+    outputData = Output(id=completion.id, message=completion.choices[0].message.content)
+    return outputData
 
 
 def saveConvMemory (messages):
@@ -92,12 +88,12 @@ def shortMemoryResponse(inputData: Input):
             sendMessages.append({"role":"user", "content":remember_memory[i][0]})
             sendMessages.append({"role":"assistant", "content":remember_memory[i][1]})
         sendMessages.append({"role":"user", "content":message})
-        response = gptResponse(message, sendMessages)
+        response = gptResponse(sendMessages)
         messages.append(response.message)
         return response
     else:
         sendMessages.append({"role":"user", "content":message})
-        response = gptResponse(message, sendMessages)
+        response = gptResponse(sendMessages)
         messages.append(response.message)
         return response
 
