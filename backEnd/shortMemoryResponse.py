@@ -6,6 +6,7 @@ from openai import OpenAI
 import os
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+import gptResponse
 
 class Input(BaseModel):
     query: str
@@ -14,9 +15,7 @@ class Output(BaseModel):
     id: str
     message: str
 
-class SendMessage(BaseModel):
-    role: Literal["system", "user", "assistant"]
-    content: str
+
 
 
 class ChatgptMemory:
@@ -30,15 +29,6 @@ chatgpt_memory: List[ChatgptMemory] = []
 client = OpenAI(
             api_key=os.environ["OPENAI_API_KEY1"]
         )
-
-def gptResponse(messages):
-    completion = client.chat.completions.create(
-        model="gpt-4o",
-        messages=messages
-    )
-    outputData = Output(id=completion.id, message=completion.choices[0].message.content)
-    return outputData
-
 
 def saveConvMemory (messages):
 
@@ -61,7 +51,7 @@ def get_embedding(text: List[str], model="text-embedding-3-small", dim=None):
 
 def shortMemoryResponse(inputData: Input):
     message: str = inputData.query
-    sendMessages: SendMessage = [{
+    sendMessages: gptResponse.SendMessage = [{
                         "role": "system",
                         "content": "日本語で返答してください。"
                     }]
@@ -88,12 +78,12 @@ def shortMemoryResponse(inputData: Input):
             sendMessages.append({"role":"user", "content":remember_memory[i][0]})
             sendMessages.append({"role":"assistant", "content":remember_memory[i][1]})
         sendMessages.append({"role":"user", "content":message})
-        response = gptResponse(sendMessages)
+        response = gptResponse.gptResponse(sendMessages)
         messages.append(response.message)
         return response
     else:
         sendMessages.append({"role":"user", "content":message})
-        response = gptResponse(sendMessages)
+        response = gptResponse.gptResponse(sendMessages)
         messages.append(response.message)
         return response
 

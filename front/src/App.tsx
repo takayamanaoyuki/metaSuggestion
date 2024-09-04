@@ -8,6 +8,11 @@ type Message = {
   text: string;
   sender: string;
 }
+type AgentType = {
+  selectValue: number,
+  name: string,
+  responseEndPoint: string
+}
 
 const Chatbot = () => {
   const [input, setInput] = useState<string>('');
@@ -17,20 +22,25 @@ const Chatbot = () => {
   const REACT_APP_API_KEY="ZZIvj2zkNOz6X4sUwY83l14fmctn1e6W";
   const chatgpt_API_ENDPOINT = "http://localhost:8000/response"
   const [currentAgentresponseEndPoint, setCurrentAgentresponseEndPoint] = useState<string>("/")
-  const agentTypes: {
-    selectValue: number,
-    responseEndPoint: string
-  }[] = [
+  const agentTypes: AgentType[] = [
     {
       selectValue: 0,
+      name: "記憶なし",
       responseEndPoint: "/"
     },
     {
       selectValue: 1,
+      name: "短期記憶あり",
       responseEndPoint: "ShortMemory/"
     },
   ]
 
+  const selectOptions = agentTypes.map((agentType) => { return (
+    {
+      value: agentType.selectValue,
+      name: agentType.name
+    }
+  )})
   const onAgentTypeChange = (event: SelectChangeEvent) => {
     const selectedAgentType = agentTypes.find((agentType) => (event.target.value == agentType.selectValue.toString()))
     if (selectedAgentType){
@@ -73,7 +83,7 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot">
-      <FrontPageHeader/>
+      <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
       <ul className="messages">
         {messages.map((message, index) => (
           <li key={index} className={message.sender}>

@@ -8,19 +8,15 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 type Props = {
   menuItems: {value: number, name: string}[];
   defaultValue: number;
+  onChange: (event: SelectChangeEvent) => void;
 }
 
-export const MetaSelect: React.FC<Props> = ({menuItems, defaultValue}) => {
-  const [age, setAge] = React.useState('');
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
-
+export const MetaSelect: React.FC<Props> = ({menuItems, defaultValue, onChange}) => {
   return (
       <FormControl fullWidth>
         <Select sx={{backgroundColor: "#ffff", borderRadius: "10px"}}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue.toString()}
+          onChange={onChange}
         >
           {menuItems.map((menuItem) => {
             return (

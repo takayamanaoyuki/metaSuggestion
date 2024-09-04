@@ -5,21 +5,19 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { MetaSelect } from '../atoms/MetaSelect';
+import { SelectOption } from './FrontPageHeader';
 
-export default function AgentTypeSelect() {
-  const [age, setAge] = React.useState('');
+type Props = {
+  onAgentTypeChange: (event: SelectChangeEvent) => void;
+  selectOptions: SelectOption[]
+}
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
-  };
-
+export const AgentTypeSelect: React.FC<Props> = ({onAgentTypeChange, selectOptions}) => {
   return (
     <Box sx={{ minWidth: 120 }}>
-      <MetaSelect menuItems={[
-        {value: 0, name: "記憶なし"},
-        {value: 1, name: "短期記憶あり"}
-      ]}
+      <MetaSelect menuItems={selectOptions}
       defaultValue={0}
+      onChange={onAgentTypeChange}
       />
       
     </Box>
