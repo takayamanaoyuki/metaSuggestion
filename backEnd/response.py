@@ -17,7 +17,6 @@ import gptResponse
 
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
 
-
 origins = [
     "http://localhost:3000",
 ]
@@ -36,7 +35,6 @@ app.add_middleware(
     # アクセス可能なレスポンスヘッダーを設定（今回は必要ない）
     allow_headers=["*"],
 )
-
 
 
 """@app.exception_handler(RequestValidationError)
