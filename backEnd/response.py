@@ -6,24 +6,25 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from openai import OpenAI
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 import sys
 import os
+from typing import List, Literal
+import shortMemoryResponse
+import gptResponse
 
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
 
-
-class Input(BaseModel):
-    query: str
-
-class Output(BaseModel):
-    id: str
-    message: str
-
-app = FastAPI()
 origins = [
     "http://localhost:3000",
 ]
+client = OpenAI(
+            api_key=os.environ["OPENAI_API_KEY1"]
+        )
 
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -35,7 +36,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-messages = []
 
 """@app.exception_handler(RequestValidationError)
 async def handler(request:Request, exc:RequestValidationError):
@@ -44,31 +44,22 @@ async def handler(request:Request, exc:RequestValidationError):
     return JSONResponse(content={}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 """
 
+
 @app.post("/response/")
-def gptResponse(outputData: Input):
-    print(outputData)
-    if not outputData.query:
-        return "Null"
-    else:
-        from openai import OpenAI
-        client = OpenAI(
-            api_key=os.environ["OPENAI_API_KEY1"]
-        )
-        completion = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
+def main_normal(inputData: gptResponse.Input):
+    messages = [
                 {
                     "role": "system",
                     "content": "日本語で返答してください。"
                 },
                 {
                     "role": "user",
-                    "content": outputData.query
+                    "content": inputData.query
                 },
-            ],
-        )
-        outputData = Output(id=completion.id, message=completion.choices[0].message.content)
-        return outputData
+            ]
+    return gptResponse.gptResponse(messages)
 
 
-    
+@app.post("/responseShortMemory/")  
+def main_shrotMomory(inputData: shortMemoryResponse.Input):
+    return shortMemoryResponse.shortMemoryResponse(inputData)

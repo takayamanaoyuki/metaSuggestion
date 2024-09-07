@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { FrontPageHeader } from './organisims/FrontPageHeader';
+import type { SelectChangeEvent } from '@mui/material';
 
 
 type Message = {
   text: string;
   sender: string;
+}
+type AgentType = {
+  selectValue: number,
+  name: string,
+  responseEndPoint: string
 }
 
 const Chatbot = () => {
@@ -13,7 +20,33 @@ const Chatbot = () => {
   const REACT_APP_API_ENDPOINT="https://api.a3rt.recruit.co.jp/talk/v1/smalltalk";
 
   const REACT_APP_API_KEY="ZZIvj2zkNOz6X4sUwY83l14fmctn1e6W";
-  const chatgpt_API_ENDPOINT = "http://localhost:8000/response/"
+  const chatgpt_API_ENDPOINT = "http://localhost:8000/response"
+  const [currentAgentresponseEndPoint, setCurrentAgentresponseEndPoint] = useState<string>("/")
+  const agentTypes: AgentType[] = [
+    {
+      selectValue: 0,
+      name: "記憶なし",
+      responseEndPoint: "/"
+    },
+    {
+      selectValue: 1,
+      name: "短期記憶あり",
+      responseEndPoint: "ShortMemory/"
+    },
+  ]
+
+  const selectOptions = agentTypes.map((agentType) => { return (
+    {
+      value: agentType.selectValue,
+      name: agentType.name
+    }
+  )})
+  const onAgentTypeChange = (event: SelectChangeEvent) => {
+    const selectedAgentType = agentTypes.find((agentType) => (event.target.value == agentType.selectValue.toString()))
+    if (selectedAgentType){
+      setCurrentAgentresponseEndPoint(selectedAgentType.responseEndPoint)
+    }
+  }
 
 
   useEffect(() => {
@@ -29,7 +62,7 @@ const Chatbot = () => {
     setMessages(messages => [...messages, { text: input, sender: 'user' }]);
     setInput('');
     try {
-      const response = await fetch(chatgpt_API_ENDPOINT ?? "", {
+      const response = await fetch(chatgpt_API_ENDPOINT + currentAgentresponseEndPoint ?? "", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +73,6 @@ const Chatbot = () => {
         })
       });
       const data = await response.json();
-      console.log(data)
 
       setMessages(messages => [...messages, { text: data.message, sender: 'bot' }]);
     } catch (error) {
@@ -50,6 +82,7 @@ const Chatbot = () => {
 
   return (
     <div className="chatbot">
+      <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
       <ul className="messages">
         {messages.map((message, index) => (
           <li key={index} className={message.sender}>
