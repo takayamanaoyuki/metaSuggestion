@@ -73,7 +73,6 @@ const Chatbot = () => {
         })
       });
       const data = await response.json();
-      console.log(data)
 
       setMessages(messages => [...messages, { text: data.message, sender: 'bot' }]);
     } catch (error) {
