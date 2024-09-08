@@ -1,9 +1,12 @@
 import { Box } from '@mui/material';
 import React, { useEffect } from 'react';
 
+type Props = {
+    number: number,
+    circled: boolean;
+}
 
-
-export const Square: React.FC = () => {
+export const Square: React.FC<Props> = ({number, circled}) => {
     useEffect(() => {
         const canvas = document.getElementById('square') as HTMLCanvasElement;
         if (canvas) {
@@ -32,15 +35,17 @@ export const Square: React.FC = () => {
 
                 // テキストの幅と高さを取得
                 ctx.font = "48px serif";
-                const text = "2";
+                const text = number.toString();
                 const textWidth = ctx.measureText(text).width;
                 const textHeight = 48; // フォントサイズに基づいておおよその高さを計算
 
                 // 円の描画
-                const radius = Math.max(textWidth, textHeight) / 2 + 10; // テキストを囲む円の半径
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2); // 正方形の中心に円を描画
-                ctx.stroke();
+                if (circled){
+                    const radius = Math.max(textWidth, textHeight) / 2 + 10; // テキストを囲む円の半径
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2); // 正方形の中心に円を描画
+                    ctx.stroke();
+                }
 
                 // テキストを正方形の中心に描画
                 ctx.fillText(text, centerX - textWidth / 2, centerY + textHeight / 4 + 5);

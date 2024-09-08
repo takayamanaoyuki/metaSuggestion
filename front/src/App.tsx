@@ -85,7 +85,7 @@ const Chatbot = () => {
   return (
     <div className="chatbot">
       <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
-      <Square/>
+      <Square number={2} circled={false}/>
       <ul className="messages">
         {messages.map((message, index) => (
           <li key={index} className={message.sender}>
