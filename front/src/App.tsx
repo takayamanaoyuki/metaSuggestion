@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { FrontPageHeader } from './organisims/FrontPageHeader';
 import type { SelectChangeEvent } from '@mui/material';
+import { Triangle } from './organisims/figures/Triangle';
+import { Square } from './organisims/figures/Square';
 
 
 type Message = {
@@ -83,6 +85,7 @@ const Chatbot = () => {
   return (
     <div className="chatbot">
       <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
+      <Square/>
       <ul className="messages">
         {messages.map((message, index) => (
           <li key={index} className={message.sender}>
