@@ -1,9 +1,16 @@
+import { Box } from "@mui/material";
 import React, {useEffect} from "react";
+import { v4 as uuidv4 } from 'uuid';
 
+type Props = {
+    number: number,
+    circled: boolean
+}
 
-export const Triangle: React.FC = () => {
+export const Triangle: React.FC<Props> = ({number, circled}) => {
+    const uniqueId = uuidv4();
     useEffect(() => {
-        const canvas = document.getElementById('triangle') as HTMLCanvasElement;
+        const canvas = document.getElementById(uniqueId) as HTMLCanvasElement;
         if (canvas) {
             const ctx = canvas.getContext('2d');
             if (ctx) {
@@ -41,15 +48,17 @@ export const Triangle: React.FC = () => {
 
                 // テキストの幅と高さを取得
                 ctx.font = "48px serif";
-                const text = "2";
+                const text = number.toString();
                 const textWidth = ctx.measureText(text).width;
                 const textHeight = 48; // フォントサイズに基づいておおよその高さを計算
 
                 // 円の描画
-                const radius = Math.max(textWidth, textHeight) / 2 ; // テキストを囲む円の半径
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2); // 正三角形の中心に円を描画
-                ctx.stroke();
+                if (circled){
+                    const radius = Math.max(textWidth, textHeight) / 2 ; // テキストを囲む円の半径
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2); // 正三角形の中心に円を描画
+                    ctx.stroke();
+                }
 
                 // テキストを正三角形の中心に描画
                 ctx.fillText(text, centerX - textWidth / 2, centerY + textHeight / 4 + 5);
@@ -58,6 +67,8 @@ export const Triangle: React.FC = () => {
     }, []);
 
     return (
-        <canvas id="triangle" width="500" height="500"></canvas>
+        <Box sx={{scale: "50%"}}>
+            <canvas id={uniqueId} width="220" height="220"></canvas>
+        </Box>
     )
 }

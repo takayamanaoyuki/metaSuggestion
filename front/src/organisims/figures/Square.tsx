@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
     number: number,
@@ -7,8 +8,9 @@ type Props = {
 }
 
 export const Square: React.FC<Props> = ({number, circled}) => {
+    const uniqueId = uuidv4();
     useEffect(() => {
-        const canvas = document.getElementById('square') as HTMLCanvasElement;
+        const canvas = document.getElementById(uniqueId) as HTMLCanvasElement;
         if (canvas) {
             const ctx = canvas.getContext('2d');
             if (ctx) {
@@ -55,7 +57,7 @@ export const Square: React.FC<Props> = ({number, circled}) => {
 
     return (
         <Box sx={{scale: "50%"}}>
-            <canvas id="square" width="500" height="500"></canvas>
+            <canvas id={uniqueId} width="220" height="220"></canvas>
         </Box>
     );
 };
