@@ -5,7 +5,7 @@ import { Box, type SelectChangeEvent } from '@mui/material';
 import { Triangle } from '../organisims/figures/Triangle';
 import { Square } from '../organisims/figures/Square';
 import { AgentCommunicationArea } from '../organisims/AgentComunicationArea';
-import { QuestionArea } from '../organisims/FigureArea';
+import { QuestionArea } from '../organisims/QuestionArea';
 
 
 type AgentType = {

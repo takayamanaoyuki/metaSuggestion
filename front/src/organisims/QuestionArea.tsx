@@ -48,24 +48,20 @@ export const QuestionArea: React.FC<Props> = () =>{
 
     return (
         <Box sx={{backgroundColor: "white", width: "60%"}}>
-            <>
-                <Typography variant="h4" >第{questionNumber}問</Typography>
-                <Box  sx={{display: "flex", gap: "10px", justifyContent: "center"}}>
-                    {figurePairList[questionNumber-1].map((figure, index)=> {
-                        if (figure.figure == "Triangle"){
-                            return (
-                                <Triangle key={index} number={figure.number} circled={false}/>
-                            )
-                        }else{
-                            return(
-                                <Square key={index} number={figure.number} circled={false}/>
-                            )
-                        }
-                    })}
-                </Box>
-            </>
-                    
-
+            <Typography variant="h4" >第{questionNumber}問</Typography>
+            <Box  sx={{display: "flex", gap: "10px", justifyContent: "center"}}>
+                {figurePairList[questionNumber-1].map((figure, index)=> {
+                    if (figure.figure == "Triangle"){
+                        return (
+                            <Triangle key={index} number={figure.number} circled={false}/>
+                        )
+                    }else{
+                        return(
+                            <Square key={index} number={figure.number} circled={false}/>
+                        )
+                    }
+                })}
+            </Box>
         </Box>
     )
 }
