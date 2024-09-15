@@ -5,7 +5,7 @@ import { Box, type SelectChangeEvent } from '@mui/material';
 import { Triangle } from '../organisims/figures/Triangle';
 import { Square } from '../organisims/figures/Square';
 import { AgentCommunicationArea } from '../organisims/AgentComunicationArea';
-import { QuestionArea } from '../organisims/QuestionArea';
+import { QAArea } from '../organisims/QAArea';
 
 
 type AgentType = {
@@ -46,7 +46,7 @@ export const Home:React.FC = () => {
     <div className="chatbot">
       <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
       <Box sx={{display: "flex"}}>
-        <QuestionArea/>
+        <QAArea/>
         <AgentCommunicationArea currentAgentresponseEndPoint={currentAgentresponseEndPoint}/>
       </Box>
     </div>
