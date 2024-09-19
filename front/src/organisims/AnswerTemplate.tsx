@@ -1,8 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { QATemplate } from "./QATemplate";
-import { on } from "events";
+
 
 export const AnswerTemplate: React.FC = () =>{
     const location = useLocation();
