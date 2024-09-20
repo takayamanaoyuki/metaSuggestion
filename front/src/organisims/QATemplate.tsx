@@ -13,6 +13,14 @@ type Props = {
 }
 
 export const QATemplate: React.FC<Props> = ({onClick, questionNumber, isCircred, buttonDisplayName}) =>{
+    const judgeFigureWinner = (index: number) =>{
+        const isLeftWin = figurePairList[questionNumber-1][0].number > figurePairList[questionNumber-1][1].number + 1
+        if (index){
+            return !isLeftWin
+        }else{
+            return isLeftWin
+        }
+    }
     return (
         <>
             <Box sx={{display: "flex", justifyContent: "space-between"}}>
@@ -23,11 +31,11 @@ export const QATemplate: React.FC<Props> = ({onClick, questionNumber, isCircred,
                 {figurePairList[questionNumber-1].map((figure, index)=> {
                     if (figure.figure == "Triangle"){
                         return (
-                            <Triangle key={index} number={figure.number} circled={isCircred}/>
+                            <Triangle key={index} number={figure.number} circled={isCircred ? judgeFigureWinner(index): false}/>
                         )
                     }else{
                         return(
-                            <Square key={index} number={figure.number} circled={isCircred}/>
+                            <Square key={index} number={figure.number} circled={isCircred ? judgeFigureWinner(index): false}/>
                         )
                     }
                 })}
