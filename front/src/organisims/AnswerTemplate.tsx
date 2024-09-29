@@ -5,6 +5,7 @@ import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import type { QuestionForm } from "./SelectAnswerRadioButton";
 import { FormControl, FormLabel, Box, Typography, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
+import { PageState } from "./QuestionTemplate";
 
 type AnswerForm = {
     expectedWinnerRule: string,
@@ -16,8 +17,9 @@ const confidenceLevelRange = [...Array(11)].map((v, index)=> index)
 
 export const AnswerTemplate: React.FC = () =>{
     const location = useLocation();
-    const state = location.state as {questionNumber: number, type: "question" | "answer"} | null
+    const state = location.state as PageState | null
     const questionNumber = state? state.questionNumber : 1
+    const maxReachedQuestionNumber = state ? state.maxReachedQuestionNumber ?? 1 : 1
     const navigate = useNavigate()
     const onNextQuestionClick: SubmitHandler<AnswerForm> = async (data: AnswerForm) => {
         try {
@@ -30,11 +32,10 @@ export const AnswerTemplate: React.FC = () =>{
               body: JSON.stringify({questionNumber: questionNumber, ...data})
             });
             const responseData = await response.json();
-            console.log(responseData)
           } catch (error) {
             console.error(error)
           }
-        await navigate('/',{state: {questionNumber: questionNumber + 1, type: "question"}})
+        await navigate('/',{state: {questionNumber: questionNumber + 1, type: "question", maxReachedQuestionNumber: questionNumber + 1 > maxReachedQuestionNumber ? questionNumber + 1 : maxReachedQuestionNumber}})
     }
     const {
         register,

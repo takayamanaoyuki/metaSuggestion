@@ -11,11 +11,17 @@ import { SelectAnswerRadioButton } from "./SelectAnswerRadioButton";
 import type { QuestionForm } from "./SelectAnswerRadioButton";
 import type { SubmitHandler } from "react-hook-form";
 const QUESTIONAIRE_API = "http://localhost:8000/winnerQuestionaire"
+export type PageState = {
+    questionNumber: number, 
+    type: "question" | "answer",
+    maxReachedQuestionNumber: number
+}
 
 export const QuestionTemplate: React.FC = () =>{
     const location = useLocation();
-    const state = location.state as {questionNumber: number, type: "question" | "answer"} | null
+    const state = location.state as PageState | null
     const questionNumber = state? state.questionNumber : 1
+    const maxReachedQuestionNumber = state ? state.maxReachedQuestionNumber ?? 1 : 1
     const navigate = useNavigate()
     const onAnswerClick: SubmitHandler<QuestionForm> = async (data: QuestionForm) => {
         try {
@@ -28,11 +34,10 @@ export const QuestionTemplate: React.FC = () =>{
               body: JSON.stringify({questionNumber: questionNumber, ...data})
             });
             const responseData = await response.json();
-            console.log(responseData)
           } catch (error) {
             console.error(error)
           }
-        await navigate('/',{state: {questionNumber: questionNumber, type: "answer"}})
+        await navigate('/',{state: {questionNumber: questionNumber, type: "answer", maxReachedQuestionNumber: questionNumber > maxReachedQuestionNumber ? questionNumber : maxReachedQuestionNumber}})
     }
     const {
         control,

@@ -18,7 +18,7 @@ def saveWinnerAnswer(inputData: Input):
     # sqliteを操作するカーソルオブジェクトを作成
     cur = conn.cursor()
     cur.execute(
-    'CREATE TABLE IF NOT EXISTS expected_winner(user_id TEXT PRIMARY KEY, questionNumber INTEGER, expected_winner INTEGER);')
+    'CREATE TABLE IF NOT EXISTS expected_winner(user_id TEXT, questionNumber INTEGER, expected_winner INTEGER, PRIMARY KEY(user_id, questionNumber));')
     if record_isexist(cur, inputData.questionNumber):
         cur.execute('delete from expected_winner WHERE user_id = ? AND questionNumber = ? ;', ( USER_ID, inputData.questionNumber))
     cur.execute('INSERT INTO expected_winner(user_id, questionNumber, expected_winner) values(?, ?, ?);', (USER_ID, inputData.questionNumber , inputData.winner))

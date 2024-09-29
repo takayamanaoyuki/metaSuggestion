@@ -17,7 +17,7 @@ export const QAArea: React.FC = () =>{
     },[])
 
     return (
-        <Box sx={{backgroundColor: "white", width: "60%", padding: "20px"}}>
+        <Box >
             {state?.type == "question" ? <QuestionTemplate/> : <AnswerTemplate/>}
         </Box>
     )
