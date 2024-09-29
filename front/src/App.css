@@ -58,7 +58,7 @@ form {
   display:flex;
 }
 
-form input[type="text"]{
+.agent-communication-form{
    flex-grow :1;
    border-radius :16px;
    padding :8px;

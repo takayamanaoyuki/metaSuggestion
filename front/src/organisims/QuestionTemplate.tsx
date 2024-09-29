@@ -10,14 +10,34 @@ import { Form, useForm } from "react-hook-form";
 import { SelectAnswerRadioButton } from "./SelectAnswerRadioButton";
 import type { QuestionForm } from "./SelectAnswerRadioButton";
 import type { SubmitHandler } from "react-hook-form";
+const QUESTIONAIRE_API = "http://localhost:8000/winnerQuestionaire"
+export type PageState = {
+    questionNumber: number, 
+    type: "question" | "answer",
+    maxReachedQuestionNumber: number
+}
 
 export const QuestionTemplate: React.FC = () =>{
     const location = useLocation();
-    const state = location.state as {questionNumber: number, type: "question" | "answer"} | null
+    const state = location.state as PageState | null
     const questionNumber = state? state.questionNumber : 1
+    const maxReachedQuestionNumber = state ? state.maxReachedQuestionNumber ?? 1 : 1
     const navigate = useNavigate()
-    const onNextQuestionClick: SubmitHandler<QuestionForm> = async () => {
-        await navigate('/',{state: {questionNumber: questionNumber, type: "answer"}})
+    const onAnswerClick: SubmitHandler<QuestionForm> = async (data: QuestionForm) => {
+        try {
+            const response = await fetch(QUESTIONAIRE_API ?? "", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*"
+              },
+              body: JSON.stringify({questionNumber: questionNumber, ...data})
+            });
+            const responseData = await response.json();
+          } catch (error) {
+            console.error(error)
+          }
+        await navigate('/',{state: {questionNumber: questionNumber, type: "answer", maxReachedQuestionNumber: questionNumber > maxReachedQuestionNumber ? questionNumber : maxReachedQuestionNumber}})
     }
     const {
         control,
@@ -27,7 +47,7 @@ export const QuestionTemplate: React.FC = () =>{
     
     return (
         questionNumber <= figurePairList.length ? 
-            <Box component="form" onSubmit={handleSubmit(onNextQuestionClick)} sx={{display: "block"}}>
+            <Box component="form" onSubmit={handleSubmit(onAnswerClick)} sx={{display: "block"}}>
                 <QATemplate questionNumber={questionNumber} isCircred={false} buttonDisplayName="解答を確認"/>
                 <Box sx={{display: "flex", justifyContent: "center", width: "100%"}}>
                     <SelectAnswerRadioButton errors={errors} control={control} />

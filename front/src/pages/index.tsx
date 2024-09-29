@@ -6,6 +6,7 @@ import { Triangle } from '../organisims/figures/Triangle';
 import { Square } from '../organisims/figures/Square';
 import { AgentCommunicationArea } from '../organisims/AgentComunicationArea';
 import { QAArea } from '../organisims/QAArea';
+import { NavigateToProblemButton } from '../organisims/NavigateToProblemButton';
 
 
 type AgentType = {
@@ -46,9 +47,13 @@ export const Home:React.FC = () => {
     <div className="chatbot">
       <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
       <Box sx={{display: "flex"}}>
-        <QAArea/>
+        <Box sx={{width: "60%", backgroundColor: "white", padding: "20px", gap: "10px", display: "flex", flexDirection: "column"}}>
+          <QAArea/>
+          <NavigateToProblemButton/>
+        </Box>  
         <AgentCommunicationArea currentAgentresponseEndPoint={currentAgentresponseEndPoint}/>
       </Box>
+      
     </div>
   );
 }

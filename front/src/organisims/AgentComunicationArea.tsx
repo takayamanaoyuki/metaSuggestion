@@ -61,7 +61,7 @@ export const AgentCommunicationArea: React.FC<Props> = ({currentAgentresponseEnd
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
-        <input type="text" value={input} onChange={handleInputChange} />
+        <input className='agent-communication-form' type="text" value={input} onChange={handleInputChange} />
         <button type="submit">Send</button>
       </form>
     </Box>
