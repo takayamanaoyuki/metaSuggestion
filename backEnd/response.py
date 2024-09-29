@@ -14,6 +14,7 @@ import os
 from typing import List, Literal
 import shortMemoryResponse
 import gptResponse
+import saveUserQuestionaireAnswerDB
 
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
 
@@ -63,3 +64,8 @@ def main_normal(inputData: gptResponse.Input):
 @app.post("/responseShortMemory/")  
 def main_shrotMomory(inputData: shortMemoryResponse.Input):
     return shortMemoryResponse.shortMemoryResponse(inputData)
+
+@app.post("/questionaire/")  
+def main_saveQuestionaire(inputData: saveUserQuestionaireAnswerDB.Input):
+    print(inputData)
+    return saveUserQuestionaireAnswerDB.saveWinnerAnswer(inputData)

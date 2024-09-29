@@ -13,7 +13,6 @@ type AnswerForm = {
 
 const confidenceLevelRange = [...Array(11)].map((v, index)=> index)
 
-
 export const AnswerTemplate: React.FC = () =>{
     const location = useLocation();
     const state = location.state as {questionNumber: number, type: "question" | "answer"} | null
