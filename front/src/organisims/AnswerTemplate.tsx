@@ -7,10 +7,11 @@ import { FormControl, FormLabel, Box, Typography, TextField } from "@mui/materia
 import { red } from "@mui/material/colors";
 
 type AnswerForm = {
-    expectedRule: string,
+    expectedWinnerRule: string,
     confidenceLevelOfRule: number
 }
 
+const QUESTIONAIRE_API = "http://localhost:8000/ruleQuestionaire"
 const confidenceLevelRange = [...Array(11)].map((v, index)=> index)
 
 export const AnswerTemplate: React.FC = () =>{
@@ -18,7 +19,21 @@ export const AnswerTemplate: React.FC = () =>{
     const state = location.state as {questionNumber: number, type: "question" | "answer"} | null
     const questionNumber = state? state.questionNumber : 1
     const navigate = useNavigate()
-    const onAnswerClick: SubmitHandler<AnswerForm> = async () => {
+    const onNextQuestionClick: SubmitHandler<AnswerForm> = async (data: AnswerForm) => {
+        try {
+            const response = await fetch(QUESTIONAIRE_API ?? "", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*"
+              },
+              body: JSON.stringify({questionNumber: questionNumber, ...data})
+            });
+            const responseData = await response.json();
+            console.log(responseData)
+          } catch (error) {
+            console.error(error)
+          }
         await navigate('/',{state: {questionNumber: questionNumber + 1, type: "question"}})
     }
     const {
@@ -28,13 +43,13 @@ export const AnswerTemplate: React.FC = () =>{
       } = useForm<AnswerForm>();
     return (
     <>
-        <Box component="form" onSubmit={handleSubmit(onAnswerClick)} sx={{display: "flex", flexDirection: "column"}}>
+        <Box component="form" onSubmit={handleSubmit(onNextQuestionClick)} sx={{display: "flex", flexDirection: "column"}}>
             <QATemplate  questionNumber={questionNumber} isCircred={true} buttonDisplayName="次の問題へ"/>
             <FormControl sx={{width: "100%", gap: "16px"}} >
                 <Box sx={{display: "flex", flexDirection: "column"}}>
                     <FormLabel id="expected-rule-form">推測される勝敗判定のルール</FormLabel>
-                    <TextField id="expected-rule-form"  variant="outlined" {...register("expectedRule", { required: { value: true, message: "あなたが予想する図形の勝敗を決めるルールを入力してください" } })} />
-                    <Typography color={red["A400"]}>{errors.expectedRule?.message}</Typography>
+                    <TextField id="expected-rule-form"  variant="outlined" {...register("expectedWinnerRule", { required: { value: true, message: "あなたが予想する図形の勝敗を決めるルールを入力してください" } })} />
+                    <Typography color={red["A400"]}>{errors.expectedWinnerRule?.message}</Typography>
                 </Box>
                 <Box sx={{display: "flex", flexDirection: "column"}}>
                     <FormLabel id="confidence-level-select">上記ルールを最終的なルールとして適用する際の確信度</FormLabel>

@@ -10,7 +10,7 @@ import { Form, useForm } from "react-hook-form";
 import { SelectAnswerRadioButton } from "./SelectAnswerRadioButton";
 import type { QuestionForm } from "./SelectAnswerRadioButton";
 import type { SubmitHandler } from "react-hook-form";
-const QUESTIONAIRE_API = "http://localhost:8000/questionaire"
+const QUESTIONAIRE_API = "http://localhost:8000/winnerQuestionaire"
 
 export const QuestionTemplate: React.FC = () =>{
     const location = useLocation();
