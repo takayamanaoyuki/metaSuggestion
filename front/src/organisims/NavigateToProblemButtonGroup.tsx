@@ -4,7 +4,7 @@ import { figurePairList } from "./QuestionData";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { PageState } from "./QuestionTemplate";
 
-export const NavigateToProblemButton: React.FC = () =>{
+export const NavigateToProblemButtonGroup: React.FC = () =>{
     const location = useLocation()
     const state = location.state as (PageState | null )
     const maxReachedQuestionNumber = state ? state.maxReachedQuestionNumber ?? 1 : 1

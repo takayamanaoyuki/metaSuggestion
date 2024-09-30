@@ -16,6 +16,7 @@ import shortMemoryResponse
 import gptResponse
 from questionaireDB import saveWinnerQuestionaireAnswerDB
 from questionaireDB import saveRuleQuestionaireAnswerDB
+import saveUserInfo
 
 
 sys.path.append("/Users/takayama/Documents/meta/metaSuggestion/lib/python3.12/site-packages")
@@ -74,3 +75,7 @@ def main_saveWinnerQuestionaire(inputData: saveWinnerQuestionaireAnswerDB.Input)
 @app.post("/ruleQuestionaire/")  
 def main_saveRuleQuestionaire(inputData: saveRuleQuestionaireAnswerDB.Input):
     return saveRuleQuestionaireAnswerDB.saveRuleAnswer(inputData)
+
+@app.post("/login/")  
+def main_saveRuleQuestionaire(inputData: saveUserInfo.Input):
+    return saveUserInfo.saveUserInfo(inputData)

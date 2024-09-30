@@ -6,13 +6,12 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { figurePairList } from "./QuestionData";
 
 type Props = {
-    onClick?: () => Promise<void>;
+    children: React.ReactNode;
     questionNumber: number;
     isCircred: boolean;
-    buttonDisplayName: string;
 }
 
-export const QATemplate: React.FC<Props> = ({onClick, questionNumber, isCircred, buttonDisplayName}) =>{
+export const QATemplate: React.FC<Props> = ({questionNumber, isCircred, children}) =>{
     const judgeFigureWinner = (index: number) =>{
         const isLeftWin = figurePairList[questionNumber-1][0].number > figurePairList[questionNumber-1][1].number + 1
         if (index){
@@ -25,7 +24,7 @@ export const QATemplate: React.FC<Props> = ({onClick, questionNumber, isCircred,
         <>
             <Box sx={{display: "flex", justifyContent: "space-between"}}>
                 <Typography variant="h4" >第{questionNumber}問</Typography>
-                <Button variant="contained" onClick={onClick} type="submit">{buttonDisplayName}</Button>
+                {children}
             </Box>
             <Box  sx={{display: "flex", gap: "10px", justifyContent: "center"}}>
                 {figurePairList[questionNumber-1].map((figure, index)=> {

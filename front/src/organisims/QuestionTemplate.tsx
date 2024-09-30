@@ -10,6 +10,7 @@ import { Form, useForm } from "react-hook-form";
 import { SelectAnswerRadioButton } from "./SelectAnswerRadioButton";
 import type { QuestionForm } from "./SelectAnswerRadioButton";
 import type { SubmitHandler } from "react-hook-form";
+import { USER_ID } from "../pages";
 const QUESTIONAIRE_API = "http://localhost:8000/winnerQuestionaire"
 export type PageState = {
     questionNumber: number, 
@@ -31,7 +32,7 @@ export const QuestionTemplate: React.FC = () =>{
                 'Content-Type': 'application/json',
                 "Access-Control-Allow-Origin": "*"
               },
-              body: JSON.stringify({questionNumber: questionNumber, ...data})
+              body: JSON.stringify({user_id: USER_ID, questionNumber: questionNumber, ...data})
             });
             const responseData = await response.json();
           } catch (error) {
@@ -48,7 +49,9 @@ export const QuestionTemplate: React.FC = () =>{
     return (
         questionNumber <= figurePairList.length ? 
             <Box component="form" onSubmit={handleSubmit(onAnswerClick)} sx={{display: "block"}}>
-                <QATemplate questionNumber={questionNumber} isCircred={false} buttonDisplayName="解答を確認"/>
+                <QATemplate questionNumber={questionNumber} isCircred={false}>
+                    <Button variant="contained" type="submit">{"解答を確認"}</Button>
+                </QATemplate>
                 <Box sx={{display: "flex", justifyContent: "center", width: "100%"}}>
                     <SelectAnswerRadioButton errors={errors} control={control} />
                 </Box>
