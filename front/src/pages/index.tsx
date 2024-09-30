@@ -7,6 +7,8 @@ import { Square } from '../organisims/figures/Square';
 import { AgentCommunicationArea } from '../organisims/AgentComunicationArea';
 import { QAArea } from '../organisims/QAArea';
 import { NavigateToProblemButtonGroup } from '../organisims/NavigateToProblemButtonGroup';
+import { LoginPage } from './LoginPage';
+import { Navigate } from 'react-router-dom';
 
 
 type AgentType = {
@@ -15,8 +17,7 @@ type AgentType = {
   responseEndPoint: string
 }
 
-export const USER_ID = localStorage.getItem("user_id")
-
+export const USER_ID = localStorage.getItem("user_id_metaSuggestion_experiment")
 export const Home:React.FC = () => {
   const [currentAgentresponseEndPoint, setCurrentAgentresponseEndPoint] = useState<string>("/")
   const agentTypes: AgentType[] = [
@@ -44,8 +45,9 @@ export const Home:React.FC = () => {
       setCurrentAgentresponseEndPoint(selectedAgentType.responseEndPoint)
     }
   }
-
+  console.log(USER_ID)
   return (
+    USER_ID ? 
     <div className="chatbot">
       <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
       <Box sx={{display: "flex"}}>
@@ -55,8 +57,8 @@ export const Home:React.FC = () => {
         </Box>  
         <AgentCommunicationArea currentAgentresponseEndPoint={currentAgentresponseEndPoint}/>
       </Box>
-      
-    </div>
+    </div> :
+    <Navigate to="/login" />
   );
 }
 
