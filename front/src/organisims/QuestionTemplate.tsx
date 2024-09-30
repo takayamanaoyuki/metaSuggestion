@@ -49,7 +49,9 @@ export const QuestionTemplate: React.FC = () =>{
     return (
         questionNumber <= figurePairList.length ? 
             <Box component="form" onSubmit={handleSubmit(onAnswerClick)} sx={{display: "block"}}>
-                <QATemplate questionNumber={questionNumber} isCircred={false} buttonDisplayName="解答を確認"/>
+                <QATemplate questionNumber={questionNumber} isCircred={false}>
+                    <Button variant="contained" type="submit">{"解答を確認"}</Button>
+                </QATemplate>
                 <Box sx={{display: "flex", justifyContent: "center", width: "100%"}}>
                     <SelectAnswerRadioButton errors={errors} control={control} />
                 </Box>

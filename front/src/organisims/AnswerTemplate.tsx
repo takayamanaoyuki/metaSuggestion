@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { QATemplate } from "./QATemplate";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import type { QuestionForm } from "./SelectAnswerRadioButton";
-import { FormControl, FormLabel, Box, Typography, TextField } from "@mui/material";
+import { FormControl, FormLabel, Box, Typography, TextField, Button } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { PageState } from "./QuestionTemplate";
 import { USER_ID } from "../pages";
@@ -46,7 +46,11 @@ export const AnswerTemplate: React.FC = () =>{
     return (
     <>
         <Box component="form" onSubmit={handleSubmit(onNextQuestionClick)} sx={{display: "flex", flexDirection: "column"}}>
-            <QATemplate  questionNumber={questionNumber} isCircred={true} buttonDisplayName="次の問題へ"/>
+            <QATemplate  questionNumber={questionNumber} isCircred={true}>
+                {maxReachedQuestionNumber > questionNumber ? <Button variant="contained" type="submit" disabled>{"次の問題へ"}</Button>:
+                <Button variant="contained" type="submit">{"次の問題へ"}</Button>}
+                
+            </QATemplate>
             <FormControl sx={{width: "100%", gap: "16px"}} >
                 <Box sx={{display: "flex", flexDirection: "column"}}>
                     <FormLabel id="expected-rule-form">推測される勝敗判定のルール</FormLabel>
