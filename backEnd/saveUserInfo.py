@@ -9,7 +9,7 @@ class Input(BaseModel):
     sex: str
 
 def record_isexist(cur, user_id: str):
-    cur.execute("SELECT user_id FROM expected_winner WHERE user_id = ?;", (user_id))
+    cur.execute("SELECT user_id FROM user_info WHERE user_id = ?;", (user_id, ))
     if cur.fetchone() == None:
         return False
     return True  
@@ -22,7 +22,7 @@ def saveUserInfo(inputData: Input):
     cur.execute(
     'CREATE TABLE IF NOT EXISTS user_info(user_id TEXT primary key, name TEXT, age INTEGER, sex TEXT);')
     if record_isexist(cur, inputData.user_id):
-        cur.execute('delete from user_info WHERE user_id = ?;', ( inputData.user_id ))
+        cur.execute('delete from user_info WHERE user_id = ?;', ( inputData.user_id, ))
     cur.execute('INSERT INTO user_info(user_id, name, age, sex) values(?, ?, ?, ?);', (inputData.user_id, inputData.name , inputData.age, inputData.sex))
     # データベースへコミット。これで変更が反映される。
     conn.commit()

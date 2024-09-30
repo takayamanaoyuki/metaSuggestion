@@ -6,6 +6,7 @@ import type { QuestionForm } from "./SelectAnswerRadioButton";
 import { FormControl, FormLabel, Box, Typography, TextField } from "@mui/material";
 import { red } from "@mui/material/colors";
 import { PageState } from "./QuestionTemplate";
+import { USER_ID } from "../pages";
 
 type AnswerForm = {
     expectedWinnerRule: string,
@@ -29,7 +30,7 @@ export const AnswerTemplate: React.FC = () =>{
                 'Content-Type': 'application/json',
                 "Access-Control-Allow-Origin": "*"
               },
-              body: JSON.stringify({questionNumber: questionNumber, ...data})
+              body: JSON.stringify({user_id: USER_ID, questionNumber: questionNumber, ...data})
             });
             const responseData = await response.json();
           } catch (error) {

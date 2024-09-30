@@ -15,6 +15,8 @@ type AgentType = {
   responseEndPoint: string
 }
 
+export const USER_ID = localStorage.getItem("user_id")
+
 export const Home:React.FC = () => {
   const [currentAgentresponseEndPoint, setCurrentAgentresponseEndPoint] = useState<string>("/")
   const agentTypes: AgentType[] = [

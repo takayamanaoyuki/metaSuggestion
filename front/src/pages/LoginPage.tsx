@@ -32,6 +32,7 @@ export const LoginPage: React.FC = () => {
           } catch (error) {
             console.error(error)
           }
+        localStorage.setItem("user_id", data.user_id)
         await navigate('/',{state: {questionNumber: 1, type: "question", maxReachedQuestionNumber: 1}})
     }
     const {
