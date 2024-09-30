@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Home } from './pages';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { LoginPage } from './pages/LoginPage';
 
 type AgentType = {
   selectValue: number,
@@ -15,6 +16,7 @@ export const App:React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home/>}/>
+        <Route path='/login' element={<LoginPage/>}/>
       </Routes>
     </BrowserRouter>
   );

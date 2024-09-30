@@ -6,7 +6,7 @@ import { Triangle } from '../organisims/figures/Triangle';
 import { Square } from '../organisims/figures/Square';
 import { AgentCommunicationArea } from '../organisims/AgentComunicationArea';
 import { QAArea } from '../organisims/QAArea';
-import { NavigateToProblemButton } from '../organisims/NavigateToProblemButton';
+import { NavigateToProblemButtonGroup } from '../organisims/NavigateToProblemButtonGroup';
 
 
 type AgentType = {
@@ -49,7 +49,7 @@ export const Home:React.FC = () => {
       <Box sx={{display: "flex"}}>
         <Box sx={{width: "60%", backgroundColor: "white", padding: "20px", gap: "10px", display: "flex", flexDirection: "column"}}>
           <QAArea/>
-          <NavigateToProblemButton/>
+          <NavigateToProblemButtonGroup/>
         </Box>  
         <AgentCommunicationArea currentAgentresponseEndPoint={currentAgentresponseEndPoint}/>
       </Box>
