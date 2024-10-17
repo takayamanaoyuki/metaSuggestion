@@ -32,7 +32,7 @@ export const AgentCommunicationArea: React.FC<Props> = ({currentAgentresponseEnd
     setMessages(messages => [...messages, { text: input, sender: 'user' }]);
     setInput('');
     try {
-      const response = await fetch(chatgpt_API_ENDPOINT + currentAgentresponseEndPoint ?? "", {
+      const response = await fetch(chatgpt_API_ENDPOINT + currentAgentresponseEndPoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
