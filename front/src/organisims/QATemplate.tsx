@@ -13,7 +13,10 @@ type Props = {
 
 export const QATemplate: React.FC<Props> = ({questionNumber, isCircred, children}) =>{
     const judgeFigureWinner = (index: number) =>{
-        const isLeftWin = figurePairList[questionNumber-1][0].number > figurePairList[questionNumber-1][1].number + 1
+        let isLeftWin = figurePairList[questionNumber-1][0].number > figurePairList[questionNumber-1][1].number + 1
+        if (figurePairList[questionNumber-1][0].number == figurePairList[questionNumber-1][1].number + 1){
+            isLeftWin = index ? false: true
+        }
         if (index){
             return !isLeftWin
         }else{
