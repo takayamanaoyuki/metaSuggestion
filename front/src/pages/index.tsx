@@ -50,13 +50,7 @@ export const Home:React.FC = () => {
     USER_ID ? 
     <div className="chatbot">
       <FrontPageHeader selectOptions={selectOptions} onAgentTypeChange={onAgentTypeChange}/>
-      <Box sx={{display: "flex"}}>
-        <Box sx={{width: "60%", backgroundColor: "white", padding: "20px", gap: "10px", display: "flex", flexDirection: "column"}}>
-          <QAArea/>
-          <NavigateToProblemButtonGroup/>
-        </Box>  
         <AgentCommunicationArea currentAgentresponseEndPoint={currentAgentresponseEndPoint}/>
-      </Box>
     </div> :
     <Navigate to="/login" />
   );

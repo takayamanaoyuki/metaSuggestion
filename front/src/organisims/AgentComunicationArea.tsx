@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../App.css';
 import { Box, type SelectChangeEvent } from '@mui/material';
-
+import InputImage from '../atoms/InputImage';
 
 type Message = {
   text: string;
@@ -16,12 +16,14 @@ export const AgentCommunicationArea: React.FC<Props> = ({currentAgentresponseEnd
   const [input, setInput] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const chatgpt_API_ENDPOINT = "http://localhost:8000/response"
-
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const IMAGE_ID = "imageId";
+  const FIELD_SIZE = 210;
 
   useEffect(() => {
     setMessages([{ text: '何か文章を書いてね', sender: 'bot' }]);
   }, []);
+  
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
@@ -51,7 +53,7 @@ export const AgentCommunicationArea: React.FC<Props> = ({currentAgentresponseEnd
   }
 
   return (
-    <Box sx={{width: "40%"}}>
+    <Box>
       <ul className="messages">
         {messages.map((message, index) => (
           <li key={index} className={message.sender}>
@@ -60,6 +62,7 @@ export const AgentCommunicationArea: React.FC<Props> = ({currentAgentresponseEnd
           </li>
         ))}
       </ul>
+      
       <form onSubmit={handleSubmit}>
         <input className='agent-communication-form' type="text" value={input} onChange={handleInputChange} />
         <button type="submit">Send</button>
