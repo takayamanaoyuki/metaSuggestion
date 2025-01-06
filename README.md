@@ -1,3 +1,7 @@
+## このシステムで出来ること
+図形の勝敗予想ゲームをすることができます。左右に図形が表示され、ユーザーは全30問を通して勝敗を決めるルールを予想します。その際、GPTと相談することができます。ユーザーの情報や選択した図形はUserQuestionaireAnswer.dbに保存されます。
+<img width="1440" alt="スクリーンショット 2025-01-06 22 54 50" src="https://github.com/user-attachments/assets/dba4ead1-9155-4561-aee4-cc0f9ca5e439" />
+
 ## 事前にインストールすべき言語
 node.js, python
 ## 入れる必要のあるモジュール
