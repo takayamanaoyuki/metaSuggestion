@@ -17,7 +17,7 @@ class SendMessage(BaseModel):
     content: str
 
 client = OpenAI(
-            api_key=os.environ["OPENAI_API_KEY1"]
+            api_key=os.environ["OPENAI_API_KEY2"]
         )
 
 def gptResponse(messages: SendMessage):
