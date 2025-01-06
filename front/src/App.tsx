@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import { Home } from './pages';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
-
-type AgentType = {
-  selectValue: number,
-  name: string,
-  responseEndPoint: string
-}
 
 export const App:React.FC = () => {
 

@@ -149,11 +149,11 @@ export const figurePairList:
     [
         {
             figure: "Square",
-            number: 2
+            number: 5
         },
         {
             figure: "Triangle",
-            number: 5
+            number: 6
         }
     ],
     [
